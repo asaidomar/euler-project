@@ -1,3 +1,5 @@
+import time
+
 dict_result = {}
 
 
@@ -16,10 +18,12 @@ def fibo(n):
 
 
 def get_million_even_term(N):
+    ts = time.time()
     i = 0
     while True:
         r = fibo(i)
         if r > N:
+            print("took ", time.time() - ts)
             return
         if r % 2 == 0:
             yield r
