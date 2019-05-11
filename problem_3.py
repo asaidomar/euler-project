@@ -14,5 +14,5 @@ def main(n):
 
 
 if __name__ == '__main__':
-    max_ = main(9438)
+    max_ = main(28)
     print(max_)
