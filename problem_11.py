@@ -22,70 +22,48 @@ matrix = [[8, 2, 22, 97, 38, 15, 00, 40, 00, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91
           [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]]
 
 
-def get_cols():
-    for i in range(len(matrix)):
-        result = list(_get_cols(matrix, i))
-        yield result
-
-
-def _get_cols(matrix, k):
-    for i, l in enumerate(matrix):
-        for j, c in enumerate(l):
-            if j == k:
-                yield c
-
-
-def prod(arg):
-    if not arg:
-        return 0
-    try:
-        return reduce(lambda x, y: x * y, arg)
-    except Exception:
-        return 0
-
-
-def get_siblins(distance, i, j):
-    matrixT = list(get_cols())
-
-    left, right, top, bottom = [], [], [], []
-
-    if i - distance >= 0:
-        left = matrix[i][j-distance:j]
-    if i + distance <= len(matrix):
-        right = matrix[i][j:j+distance]
-    if j - distance >= 0:
-        top = matrixT[i][j-distance:j]
-    if j + distance <= len(matrix):
-        bottom = matrixT[i][j:j+distance]
-    return left, right, top, bottom
-
-
-def get_direction(i, j, N):
-    l, r, t, b = [], [], [], []
+def get_direction(N):
+    l, r, t, b, lt, rt, lb, rb = [], [], [], [], [], [], [], []
     for n in range(-N, N + 1):
         for s in range(-N, N + 1):
             if n == 0:
-                yield n, s
+                if s < 0:
+                    b.append((n, s))
+                if s > 0:
+                    t.append((n, s))
             if s == 0:
-                yield n, s
-            if s == n:
-                yield n, s
+                if n < 0:
+                    l.append((n, s))
+                if n > 0:
+                    r.append((n, s))
+            if abs(s) == abs(n):
+                if s > 0 and n > 0:
+                    rt.append((n, s))
+                if n < 0 and s > 0:
+                    lt.append((n, s))
+                if s < 0 and n < 0:
+                    lb.append((n, s))
+                if n > 0 and s < 0:
+                    rb.append((n, s))
+
+    return {"l": l, "r": r, "t": t, "b": b, "lt": lt, "rt": rt, "lb": lb, "rb": rb}
 
 
-def main(distance):
-    max_v = 0
-    for i, l in enumerate(matrix):
-        for j, cell in enumerate(l):
-
-            for k in range(1, distance):
-                pass
-
+def main(adj_number):
+    max_v = 1
+    for i, line in enumerate(matrix):
+        for j, cell in enumerate(line):
+            for dir_name, direct_value in get_direction(adj_number).items():
+                cell_v = 1
+                for coor in direct_value:
+                    try:
+                        cell_v *= matrix[i + coor[0]][j + coor[1]]
+                    except IndexError:
+                        cell_v = 1
+                if cell_v >= max_v:
+                    max_v = cell_v
     return max_v
 
 
 if __name__ == '__main__':
-    print((sorted(get_direction(10, 10, 4))))
-
-
-
-
+    print(main(4))
