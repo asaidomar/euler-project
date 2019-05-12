@@ -32,7 +32,10 @@ def _trans_dent(number):
     decomposed = decompose(number)
 
     number_dec = decomposed[0] + 10 * decomposed[1]
-    result = f"{trans_number_to_word(decomposed[-1])} hundred and {trans_number_to_word(number_dec)}"
+    if number_dec > 0:
+        result = f"{trans_number_to_word(decomposed[-1])} hundred and {trans_number_to_word(number_dec)}"
+    else:
+        result = f"{trans_number_to_word(decomposed[-1])} hundred"
 
     return result
 
